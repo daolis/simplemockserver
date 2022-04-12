@@ -1,0 +1,63 @@
+{
+    "/endpoint1": {
+        "method": "GET",
+        "responses": [
+            {
+                "requestQuery": {
+                    "url": "name = 'John'"
+                },
+                "response": {
+                    "status": 200,
+                    "body": {
+                        "testKey1": "testValue1",
+                        "testKey2": "testValue2"
+                    }
+                }
+            }
+        ]
+    },
+    "/endpoint2": {
+        "method": "POST",
+        "responses": [
+            {
+                "requestQuery": {
+                    "body": "name = 'John'",
+                    "url": "name = 'John'"
+                },
+                "response": {
+                    "status": 200,
+                    "body": {
+                        "testKey1": "testValue1",
+                        "testKey2": "testValue2"
+                    }
+                }
+            },
+            {
+                "requestQuery": {
+                    "body": "name = 'Doe'"
+                },
+                "response": {
+                    "status": 200,
+                    "body": {
+                        "name": "Doe",
+                        "age": 125,
+                        "other": "test"
+                    }
+                }
+            }
+        ]
+    },
+    "/oops": {
+        "method": "GET",
+        "responses": [
+            {
+                "response": {
+                    "status": 500,
+                    "body": {
+                        "error": "oops"
+                    }
+                }
+            }
+        ]
+    }
+}
