@@ -11,6 +11,7 @@ import (
 const defaultMockFile = "testfiles/mock.json"
 
 var mockFile MockFile
+var customEndpoints CustomEndpoints
 
 type MockServer interface {
 	Stop()
@@ -22,6 +23,7 @@ type mockServer struct {
 	server       *httptest.Server
 	mockFileName string
 	fixedPort    int
+	//customEndpoints CustomEndpoints
 }
 
 var _ MockServer = &mockServer{}
@@ -45,6 +47,12 @@ func WithFile(file string) MockServerProperty {
 func WithFixedPort(port int) MockServerProperty {
 	return func(m *mockServer) {
 		m.fixedPort = port
+	}
+}
+
+func WithCustomEndpoints(endpoints CustomEndpoints) MockServerProperty {
+	return func(m *mockServer) {
+		customEndpoints = endpoints
 	}
 }
 
@@ -79,8 +87,23 @@ func NewMockServer(properties ...MockServerProperty) (MockServer, error) {
 	}
 
 	fmt.Printf("Started mock server at %s\n", server.server.URL)
+	for key, endpoint := range customEndpoints {
+		for method, _ := range endpoint {
+			fmt.Printf(" [%6s] %s\n", method, path.Join(server.server.URL, key))
+		}
+	}
 	for p, endpoint := range mockFile {
-		fmt.Printf(" [%6s] %s\n", endpoint.Method, path.Join(server.server.URL, p))
+		for method, _ := range endpoint {
+			var disabled string
+			if customEndpoints != nil {
+				if cep, ok := customEndpoints[p]; ok {
+					if _, ok := cep[method]; ok {
+						disabled = " - overruled by custom endpoint"
+					}
+				}
+			}
+			fmt.Printf(" [%6s] %s%s\n", method, path.Join(server.server.URL, p), disabled)
+		}
 	}
 	return server, nil
 }

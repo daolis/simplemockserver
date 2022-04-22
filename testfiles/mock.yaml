@@ -1,0 +1,54 @@
+"/endpoint1":
+  GET:
+    - requestQuery:
+        url: name = ['John']
+      response:
+        status: 200
+        body:
+          testKey1: testValue1
+          testKey2: testValue2
+"/endpoint2":
+  POST:
+    - requestQuery:
+        body: name = 'John'
+        url: name = 'John'
+      response:
+        status: 200
+        body:
+          testKey1: testValue1
+          testKey2: testValue2
+    - requestQuery:
+        body: name = 'Doe'
+      response:
+        status: 200
+        body:
+          name: Doe
+          age: 125
+          other: test
+    - requestQuery:
+        body: user.name = 'Franz'
+      response:
+        status: 200
+        body:
+          type: More complex query
+          user:
+            firstname: Franz
+            lastname: Tester
+          other: someOtherValue
+"/oops":
+  GET:
+    - response:
+        status: 500
+        body:
+          error: oops
+"/custom":
+  GET:
+    - response:
+        status: 500
+        body:
+          error: oops
+  POST:
+    - response:
+        status: 500
+        body:
+          error: oops
